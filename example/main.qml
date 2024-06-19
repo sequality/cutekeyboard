@@ -100,8 +100,8 @@ Window {
         y: window.height
         anchors.left: parent.left
         anchors.right: parent.right
-        languageLayout: "It"
-        availableLanguageLayouts: ["It", "En"]
+        languageLayout: "Es"
+        availableLanguageLayouts: ["Hr", "LtSr", "CyBs", "Es"]
 
         states: State {
             name: "visible"

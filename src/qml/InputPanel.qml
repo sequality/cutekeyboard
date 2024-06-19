@@ -33,10 +33,15 @@ Item {
     }
 
     function loadLettersLayout() {
-        if (InputEngine.inputLayoutValid(languageLayout))
-            layoutLoader.setSource(languageLayout + "Layout.qml", {
+        if (InputEngine.inputLayoutValid(languageLayout)){
+            var desc = InputEngine.getDescriptionOfLayout(languageLayout)
+            if(desc !== ""){
+                layoutLoader.langDescription = desc
+            }
+            layoutLoader.setSource(InputEngine.getFileOfLayout(languageLayout) + ".qml", {
             "inputPanel": root
         });
+        }
         else
             layoutLoader.setSource("EnLayout.qml", {
             "inputPanel": root
@@ -112,7 +117,8 @@ Item {
 
         Loader {
             id: layoutLoader
-
+            // lang description only needed for layouts that share a file
+            property string langDescription
             anchors {
                 fill: parent
                 margins: 5
@@ -147,7 +153,7 @@ Item {
 
         Connections {
             target: InputPanel
-            onLanguageLayoutChanged: {
+            function onLanguageLayoutChanged() {
                 languageLayout = InputPanel.languageLayout;
                 loadLettersLayout();
             }

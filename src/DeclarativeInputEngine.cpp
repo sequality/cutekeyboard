@@ -20,6 +20,21 @@ struct DeclarativeInputEnginePrivate {
 
     bool isUppercase{false};
     bool symbolMode{false};
+    QHash<QString, QString> layoutFiles = {
+        {"En", "EnLayout"},         {"Fr", "FrLayout"},
+        {"It", "ItLayout"},         {"Es", "EsLayout"},
+        {"De", "DeLayout"},         {"Nl", "NlLayout"},
+        {"Pt", "PtLayout"},         {"Cs", "CsLayout"},
+        {"El", "ElLayout"},         {"Pl", "PlLayout"},
+        {"Hr", "LtSrHrBsLayout"},   {"CyBs", "CySrBsLayout"},
+        {"LtBs", "LtSrHrBsLayout"}, {"CySr", "CySrBsLayout"},
+        {"LtSr", "LtSrHrBsLayout"}};
+    // only needed for layouts with shared files
+    QHash<QString, QString> layoutDescriptions = {{"Hr", "Hrvatski"},
+                                                  {"CyBs", "Босански"},
+                                                  {"LtBs", "Bosanski "},
+                                                  {"CySr", "Српски"},
+                                                  {"LtSr", "Srpski"}};
 };
 
 DeclarativeInputEnginePrivate::DeclarativeInputEnginePrivate(
@@ -112,4 +127,22 @@ bool DeclarativeInputEngine::inputLayoutValid(const QString &layout) const {
     qCritical() << "Keyboard layout" << layout
                 << "is not supported. Falling back to En!";
     return false;
+}
+
+QString DeclarativeInputEngine::getFileOfLayout(QString layout) {
+    QHash<QString, QString>::const_iterator found =
+        d->layoutFiles.constFind(layout);
+    if (found != d->layoutFiles.cend()) {
+        return found.value();
+    }
+    return "";
+}
+
+QString DeclarativeInputEngine::getDescriptionOfLayout(QString layout) {
+    QHash<QString, QString>::const_iterator found =
+        d->layoutDescriptions.constFind(layout);
+    if (found != d->layoutDescriptions.cend()) {
+        return found.value();
+    }
+    return "";
 }

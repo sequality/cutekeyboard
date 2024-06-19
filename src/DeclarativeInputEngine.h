@@ -37,7 +37,24 @@ class DeclarativeInputEngine : public QObject {
     /**
      * The InputLayouts enum provides a list of valid input layouts
      */
-    enum InputLayouts { En, Fr, It, Es, De, Nl, Pt, Cs, El, Pl, EndLayouts };
+    enum InputLayouts {
+        En,
+        Fr,
+        It,
+        Es,
+        De,
+        Nl,
+        Pt,
+        Cs,
+        El,
+        Pl,
+        Hr,
+        CyBs,
+        LtBs,
+        CySr,
+        LtSr,
+        EndLayouts
+    };
     Q_ENUM(InputLayouts)
 
     /**
@@ -91,6 +108,18 @@ class DeclarativeInputEngine : public QObject {
     void setSymbolMode(bool symbolMode);
 
     Q_INVOKABLE bool inputLayoutValid(const QString &layout) const;
+
+    /**
+     * Use this function to get the correct layout file for each language
+     * (some languages share one file)
+     */
+    Q_INVOKABLE QString getFileOfLayout(QString layout);
+
+    /**
+     * Use this function to get the correct layout file for each language
+     * (only needed for languages that share one file)
+     */
+    Q_INVOKABLE QString getDescriptionOfLayout(QString layout);
 
    public slots:
     /**
