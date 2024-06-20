@@ -33,20 +33,19 @@ Item {
     }
 
     function loadLettersLayout() {
-        if (InputEngine.inputLayoutValid(languageLayout)){
-            var desc = InputEngine.getDescriptionOfLayout(languageLayout)
-            if(desc !== ""){
-                layoutLoader.langDescription = desc
+            var description = InputEngine.getDescriptionOfLayout(languageLayout);
+            var source = InputEngine.getFileOfLayout(languageLayout);
+            if(description !== "" && source !== ""){
+                layoutLoader.langDescription = description
+                layoutLoader.setSource(source + ".qml", {
+                "inputPanel": root});
             }
-            layoutLoader.setSource(InputEngine.getFileOfLayout(languageLayout) + ".qml", {
-            "inputPanel": root
-        });
+            else{
+                layoutLoader.langDescription = "English"
+                layoutLoader.setSource("EnLayout.qml", {
+                "inputPanel": root});
+            }
         }
-        else
-            layoutLoader.setSource("EnLayout.qml", {
-            "inputPanel": root
-        });
-    }
 
     objectName: "inputPanel"
     width: parent.width

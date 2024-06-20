@@ -42,7 +42,3 @@ INSTALL_PLUGINS = $$INSTALL_PREFIX/$$relative_path($$[QT_INSTALL_PLUGINS], $$[QT
 deployment.files = $$QML_FILES
 deployment.path = $$INSTALL_QML/QtQuick/CuteKeyboard
 target.path = $$INSTALL_PLUGINS/platforminputcontexts
-
-DISTFILES += \
-    qml/CySrBsLayout.qml \
-    qml/LtSrHrBsLayout.qml

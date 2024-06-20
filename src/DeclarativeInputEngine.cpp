@@ -6,11 +6,18 @@
 #include <QMetaEnum>
 #include <QTimer>
 
+#include "DeclarativeInputEngine.h"
+
 /**
  * Private data class
  */
 struct DeclarativeInputEnginePrivate {
     explicit DeclarativeInputEnginePrivate(DeclarativeInputEngine *_public);
+
+    struct LayoutData {
+        QString layoutFile;
+        QString description;
+    };
 
     DeclarativeInputEngine *_this;
     bool Animating;
@@ -20,21 +27,22 @@ struct DeclarativeInputEnginePrivate {
 
     bool isUppercase{false};
     bool symbolMode{false};
-    QHash<QString, QString> layoutFiles = {
-        {"En", "EnLayout"},         {"Fr", "FrLayout"},
-        {"It", "ItLayout"},         {"Es", "EsLayout"},
-        {"De", "DeLayout"},         {"Nl", "NlLayout"},
-        {"Pt", "PtLayout"},         {"Cs", "CsLayout"},
-        {"El", "ElLayout"},         {"Pl", "PlLayout"},
-        {"Hr", "LtSrHrBsLayout"},   {"CyBs", "CySrBsLayout"},
-        {"LtBs", "LtSrHrBsLayout"}, {"CySr", "CySrBsLayout"},
-        {"LtSr", "LtSrHrBsLayout"}};
-    // only needed for layouts with shared files
-    QHash<QString, QString> layoutDescriptions = {{"Hr", "Hrvatski"},
-                                                  {"CyBs", "Босански"},
-                                                  {"LtBs", "Bosanski "},
-                                                  {"CySr", "Српски"},
-                                                  {"LtSr", "Srpski"}};
+    QHash<DeclarativeInputEngine::InputLayouts, LayoutData> layoutFiles = {
+        {DeclarativeInputEngine::En, {"EnLayout", "English"}},
+        {DeclarativeInputEngine::Fr, {"FrLayout", "Français"}},
+        {DeclarativeInputEngine::It, {"ItLayout", "Italiano"}},
+        {DeclarativeInputEngine::Es, {"EsLayout", "Español"}},
+        {DeclarativeInputEngine::De, {"DeLayout", "Deutsch"}},
+        {DeclarativeInputEngine::Nl, {"NlLayout", "Nederlands"}},
+        {DeclarativeInputEngine::Pt, {"PtLayout", "Português"}},
+        {DeclarativeInputEngine::Cs, {"CsLayout", "Čeština"}},
+        {DeclarativeInputEngine::El, {"ElLayout", "Ελληνικός"}},
+        {DeclarativeInputEngine::Pl, {"PlLayout", "Polski"}},
+        {DeclarativeInputEngine::Hr, {"LtSrHrBsLayout", "Hrvatski"}},
+        {DeclarativeInputEngine::CyBs, {"CySrBsLayout", "Босански"}},
+        {DeclarativeInputEngine::LtBs, {"LtSrHrBsLayout", "Bosanski"}},
+        {DeclarativeInputEngine::CySr, {"CySrBsLayout", "Српски"}},
+        {DeclarativeInputEngine::LtSr, {"LtSrHrBsLayout", "Srpski"}}};
 };
 
 DeclarativeInputEnginePrivate::DeclarativeInputEnginePrivate(
@@ -130,19 +138,29 @@ bool DeclarativeInputEngine::inputLayoutValid(const QString &layout) const {
 }
 
 QString DeclarativeInputEngine::getFileOfLayout(QString layout) {
-    QHash<QString, QString>::const_iterator found =
-        d->layoutFiles.constFind(layout);
-    if (found != d->layoutFiles.cend()) {
-        return found.value();
+    if (!inputLayoutValid(layout)) {
+        return "";
     }
-    return "";
+    bool ok = false;
+    auto layoutVal = static_cast<InputLayouts>(
+        QMetaEnum::fromType<InputLayouts>().keyToValue(layout.toUtf8().data(),
+                                                       &ok));
+    if (!ok) {
+        return "";
+    }
+    return d->layoutFiles.value(layoutVal, {}).layoutFile;
 }
 
 QString DeclarativeInputEngine::getDescriptionOfLayout(QString layout) {
-    QHash<QString, QString>::const_iterator found =
-        d->layoutDescriptions.constFind(layout);
-    if (found != d->layoutDescriptions.cend()) {
-        return found.value();
+    if (!inputLayoutValid(layout)) {
+        return "";
     }
-    return "";
+    bool ok = false;
+    auto layoutVal = static_cast<InputLayouts>(
+        QMetaEnum::fromType<InputLayouts>().keyToValue(layout.toUtf8().data(),
+                                                       &ok));
+    if (!ok) {
+        return "";
+    }
+    return d->layoutFiles.value(layoutVal, {}).description;
 }
