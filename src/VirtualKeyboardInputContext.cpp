@@ -8,6 +8,7 @@
 #include "EnterKeyAction.hpp"
 #include "EnterKeyActionAttachedType.hpp"
 #include "InputPanelIface.hpp"
+#include <QQmlEngine>
 
 /**
  * Private data class for VirtualKeyboardInputContext
@@ -43,12 +44,11 @@ VirtualKeyboardInputContext::VirtualKeyboardInputContext()
         "CuteKeyboard", 1, 0, "InputEngine", inputEngineProvider);
     connect(d->InputEngine, &DeclarativeInputEngine::animatingChanged, this,
             &VirtualKeyboardInputContext::ensureFocusedObjectVisible);
+
     qmlRegisterSingletonType<InputPanelIface>("CuteKeyboard", 1, 0,
                                               "InputPanel", inputPanelProvider);
-
-    qmlRegisterSingletonType<InputPanelIface>(
+    qmlRegisterSingletonType<VirtualKeyboardInputContext>(
         "CuteKeyboard", 1, 0, "InputContext", inputContextProvider);
-
     qmlRegisterType<EnterKeyAction>("QtQuick.CuteKeyboard", 1, 0,
                                     "EnterKeyAction");
     qmlRegisterType<EnterKeyAction>("CuteKeyboard", 1, 0, "EnterKeyAction");
@@ -180,5 +180,11 @@ QObject *VirtualKeyboardInputContext::inputContextProvider(
     QQmlEngine *engine, QJSEngine *scriptEngine) {
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
-    return VirtualKeyboardInputContext::instance();
+    const auto instance=VirtualKeyboardInputContext::instance();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QQmlEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+#else
+    QJSEngine::setObjectOwnership(instance,QJSEngine::CppOwnership);
+#endif
+    return instance;
 }
