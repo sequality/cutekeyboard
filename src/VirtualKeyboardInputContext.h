@@ -136,6 +136,7 @@ class VirtualKeyboardInputContext : public QPlatformInputContext {
                                          QJSEngine *scriptEngine);
 
     VirtualKeyboardInputContextPrivate *d;
+    QMetaObject::Connection visibleConnection;
 };
 
 #endif  // VIRTUALKEYBOARDINPUTCONTEXT_H

@@ -97,6 +97,8 @@ void VirtualKeyboardInputContext::setFocusObject(QObject *object) {
                                          Qt::ImhTime |
                                          Qt::ImhFormattedNumbersOnly;
 
+    QObject::disconnect(visibleConnection);
+
     if (!object) {
         return;
     }
@@ -110,6 +112,13 @@ void VirtualKeyboardInputContext::setFocusObject(QObject *object) {
     if (!AcceptsInput) {
         return;
     }
+
+    visibleConnection = QObject::connect(d->FocusItem, &QQuickItem::visibleChanged, this, [&](){
+        if(!d->FocusItem->isVisible())
+            hideInputPanel();
+        else
+            showInputPanel();
+    });
 
     emit inputItemChanged();
 
