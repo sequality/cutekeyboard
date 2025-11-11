@@ -19,6 +19,7 @@ Item {
     property string hideKeyboardIcon: "qrc:/icons/hide-arrow.png"
     property string languageIcon: "qrc:/icons/language.png"
     property var availableLanguageLayouts: ["En"]
+    property alias emptySpaceBar: layoutLoader.emptySpaceBar
 
     function showKeyPopup(keyButton) {
         keyPopup.popup(keyButton, root);
@@ -120,6 +121,9 @@ Item {
 
         Loader {
             id: layoutLoader
+
+            // display empty space bar
+            property bool emptySpaceBar: false
 
             // lang description only needed for layouts that share a file
             property string langDescription
