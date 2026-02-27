@@ -20,8 +20,8 @@ Item {
     property string languageIcon: "qrc:/icons/language.png"
     property var availableLanguageLayouts: ["En"]
     property alias emptySpaceBar: layoutLoader.emptySpaceBar
-
-    /*! \internal */
+    property bool persistentShift: true
+    //! \internal
     readonly property bool __isRootItem: root.parent !== null && root.parent.parent === null
 
     function showKeyPopup(keyButton) {
@@ -65,6 +65,7 @@ Item {
 
     }
     onLanguageLayoutChanged: loadLettersLayout()
+    onPersistentShiftChanged: InputEngine.persistentUppercase = persistentShift
     Component.onCompleted: {
         if (availableLanguageLayouts.length == 0)
             availableLanguageLayouts = ["En"];
@@ -82,6 +83,7 @@ Item {
         InputPanel.languageIcon = languageIcon;
         InputPanel.availableLanguageLayouts = availableLanguageLayouts;
         InputPanel.languageLayout = languageLayout;
+        InputEngine.persistentUppercase = persistentShift;
         loadLettersLayout();
     }
 
@@ -127,7 +129,6 @@ Item {
 
             // display empty space bar
             property bool emptySpaceBar: false
-
             // lang description only needed for layouts that share a file
             property string langDescription
             // space identifier for the correct translation of the word "space"
