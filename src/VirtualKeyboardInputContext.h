@@ -26,7 +26,7 @@ class VirtualKeyboardInputContextPrivate;
 class VirtualKeyboardInputContext : public QPlatformInputContext {
     Q_OBJECT
 
-    Q_PROPERTY(QObject *inputItem READ inputItem NOTIFY inputItemChanged)
+    Q_PROPERTY(QObject* inputItem READ inputItem NOTIFY inputItemChanged)
 
    public:
     /**
@@ -77,24 +77,35 @@ class VirtualKeyboardInputContext : public QPlatformInputContext {
      * InputEngine singleton and it ensures that the focused QML object is
      * visible if it is a child item of a Flickable
      */
-    virtual void setFocusObject(QObject *object);
+    virtual void setFocusObject(QObject* object);
 
     /**
      * Use this static instance function to access the singleton input context
      * instance.
      */
-    static VirtualKeyboardInputContext *instance();
+    static VirtualKeyboardInputContext* instance();
 
     /**
      * This function returns the current input item focused.
      */
-    QObject *inputItem() const;
+    QObject* inputItem() const;
 
     /**
      * This function returns true whenever the current focus item has the
      * enter key action attached property.
      */
-    Q_INVOKABLE bool focusItemHasEnterKeyAction(QObject *item) const;
+    Q_INVOKABLE bool focusItemHasEnterKeyAction(QObject* item) const;
+
+    /**
+     * Returns the surrounding text of the focused input field, or empty if
+     * none.
+     */
+    Q_INVOKABLE QString surroundingText() const;
+
+    /**
+     * Returns true if the focused input field is a password/hidden-text field.
+     */
+    Q_INVOKABLE bool isPasswordField() const;
 
    protected:
     /**
@@ -118,24 +129,24 @@ class VirtualKeyboardInputContext : public QPlatformInputContext {
      * The input contet creates the InputEngine object and provides it
      * as a singleton to the QML context
      */
-    static QObject *inputEngineProvider(QQmlEngine *engine,
-                                        QJSEngine *scriptEngine);
+    static QObject* inputEngineProvider(QQmlEngine* engine,
+                                        QJSEngine* scriptEngine);
 
     /**
      * The input contet creates the InputPanel object and provides it
      * as a singleton to the QML context
      */
-    static QObject *inputPanelProvider(QQmlEngine *engine,
-                                       QJSEngine *scriptEngine);
+    static QObject* inputPanelProvider(QQmlEngine* engine,
+                                       QJSEngine* scriptEngine);
 
     /**
      * The input contet creates the InputContext object and provides it
      * as a singleton to the QML context
      */
-    static QObject *inputContextProvider(QQmlEngine *engine,
-                                         QJSEngine *scriptEngine);
+    static QObject* inputContextProvider(QQmlEngine* engine,
+                                         QJSEngine* scriptEngine);
 
-    VirtualKeyboardInputContextPrivate *d;
+    VirtualKeyboardInputContextPrivate* d;
     QMetaObject::Connection visibleConnection;
 };
 
