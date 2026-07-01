@@ -115,6 +115,10 @@ Item {
         anchors.fill: parent
         propagateComposedEvents: false
         z: 99
+
+        onClicked: {
+            alternativesKeyPopup.visible = false;
+        }
     }
 
     Rectangle {
